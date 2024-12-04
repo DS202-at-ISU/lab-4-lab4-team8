@@ -59,9 +59,16 @@ for(i in 1:26){
 
 bbwaa$playerID = ids
 bbwaa = bbwaa %>% select(playerID,yearID,votedBy,ballots,needed,votes,inducted,category,needed_note)
+bbwaa = data.frame(bbwaa)
 
-return.file = HallOfFame
-return.file = rbind(return.file, bbwaa)
+
+return.file = data.frame(HallOfFame)
+return.file = data.frame(rbind(return.file, bbwaa))
+
+return.file$playerID = as.character(return.file$playerID)
+return.file$inducted = as.character(return.file$inducted)
+return.file$category = as.character(return.file$category)
+write.csv(return.file, 'HallOfFame.csv',row.names = FALSE)
 ```
 
 
