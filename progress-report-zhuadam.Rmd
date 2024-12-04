@@ -1,0 +1,23 @@
+---
+title: "progress-report-zhuadam"
+author: "Adam Zhu"
+date: "2024-12-04"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Lab 4 Adam Zhu
+
+```{r}
+install.packages("Lahman")
+library(rvest)
+library(Lahman)
+
+url <- "https://www.baseball-reference.com/awards/hof_2024.shtml"
+html <- read_html(url)
+html
+```
+
