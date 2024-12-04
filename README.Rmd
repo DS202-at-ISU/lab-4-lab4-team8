@@ -70,5 +70,3 @@ return.file$inducted = as.character(return.file$inducted)
 return.file$category = as.character(return.file$category)
 write.csv(return.file, 'HallOfFame.csv',row.names = FALSE)
 ```
-
-
