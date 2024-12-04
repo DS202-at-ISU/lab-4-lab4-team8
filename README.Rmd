@@ -41,7 +41,7 @@ bbwaa <- bbwaa %>% mutate(
   ballots = 385,
   needed = 289,
   inducted = ifelse(Votes>=289, "Y", "N"),
-  category = NA, # don't know yet
+  category = 'Player', # don't know yet
   needed_note = NA, # not sure what would go here
   Name = gsub('X-','',Name),
   YoB = readr::parse_number(YoB)
@@ -53,10 +53,15 @@ bbwaa <- bbwaa %>% mutate(
 ids = c()
 for(i in 1:26){
   newname = People %>% filter(nameFirst %in% bbwaa[i,'firstName']) %>% 
-    filter(nameLast %in% bbwaa[i,'lastName']) %>% select(playerID)
+    filter(nameLast %in% bbwaa[i,'lastName']) %>% select(playerID) %>% slice(1)
   ids = rbind(ids,newname)
 }
 
+bbwaa$playerID = ids
+bbwaa = bbwaa %>% select(playerID,yearID,votedBy,ballots,needed,votes,inducted,category,needed_note)
 
+return.file = HallOfFame
+return.file = rbind(return.file, bbwaa)
 ```
+
 
