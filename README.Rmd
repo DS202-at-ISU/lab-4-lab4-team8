@@ -7,6 +7,8 @@ output: github_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
+library(Lahman)
+library(stringi)
 ```
 
 # Lab report #4 - instructions
@@ -29,3 +31,32 @@ hof %>%
   xlim(c(2000, 2022)) +
   ylab("Percent of votes")
 ```
+
+
+```{r}
+bbwaa = read.csv('hofdata2024.csv')
+bbwaa <- bbwaa %>% mutate(
+  yearID = 2024,
+  votedBy = "BBWAA",
+  ballots = 385,
+  needed = 289,
+  inducted = ifelse(Votes>=289, "Y", "N"),
+  category = NA, # don't know yet
+  needed_note = NA, # not sure what would go here
+  Name = gsub('X-','',Name),
+  YoB = readr::parse_number(YoB)
+) %>% rename(
+  votes = Votes
+) %>% separate(Name, into = c("firstName","lastName"), sep = ' ') %>% 
+  mutate(firstName = stri_trans_general(firstName, "Any-Latin; Latin-ASCII")) %>% mutate(lastName = stri_trans_general(lastName, "Any-Latin; Latin-ASCII"))
+
+ids = c()
+for(i in 1:26){
+  newname = People %>% filter(nameFirst %in% bbwaa[i,'firstName']) %>% 
+    filter(nameLast %in% bbwaa[i,'lastName']) %>% select(playerID)
+  ids = rbind(ids,newname)
+}
+
+
+```
+
