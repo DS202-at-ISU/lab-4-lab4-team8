@@ -1,0 +1,59 @@
+---
+title: "progress-report-doyle101"
+output: html_document
+date: "2024-12-04"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r cars}
+library(Lahman)
+
+url <- "https://www.baseball-reference.com/awards/hof_2024.shtml"
+
+url <- HallOfFame
+```
+
+## Including Plots
+
+```{r}
+install.packages("rvest")
+library(rvest)
+
+# Load the URL
+url <- "https://www.baseball-reference.com/awards/hof_2024.shtml"
+
+# Read the webpage
+webpage <- read_html(url)
+
+# Extract table data (adjust selector based on the webpage structure)
+hof_table <- webpage %>%
+  html_node("table") %>%   # Adjust if there are multiple tables
+  html_table()
+
+# View the extracted data
+print(hof_table)
+
+```
+
+```{r}
+# Save to a CSV (optional)
+write.csv(hof_table, "hof_2024.csv")
+
+
+library(ggplot2)
+HallOfFame %>% 
+  ggplot(aes(x = yearID, fill = inducted)) +
+  geom_bar() +
+  xlim(c(1936, 2022))
+```
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
