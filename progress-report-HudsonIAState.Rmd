@@ -1,5 +1,5 @@
 ---
-title: 'Homework #5'
+title: 'Lab #4'
 author: "Hudson Nebbe"
 date: "12/2/2024"
 output: html_document
@@ -23,7 +23,7 @@ HallOfFame %>%
 ```
 
 ``` {r}
-
+write.csv(HallOfFame, "HallOfFame.csv", row.names = TRUE)
 ```
 
 ``` {r}
