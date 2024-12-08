@@ -23,7 +23,7 @@ HallOfFame %>%
 ```
 
 ``` {r}
-write.csv(HallOfFame, "HallOfFame.csv", row.names = TRUE)
+write.csv(HallOfFame, "HallOfFame.csv", row.names = FALSE)
 ```
 
 ``` {r}
@@ -56,3 +56,4 @@ write.csv(dframe, file="some-file.csv", row.names = FALSE)
 
 readr::write_csv(dframe, file="some-other-file.csv")
 ```
+
