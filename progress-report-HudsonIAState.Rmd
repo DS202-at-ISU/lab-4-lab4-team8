@@ -1,0 +1,31 @@
+---
+title: 'Homework #5'
+author: "Hudson Nebbe"
+date: "12/2/2024"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(Lahman)
+library(dplyr)
+library(ggplot2)
+```
+
+``` {r}
+head(HallOfFame, 3);
+```
+
+``` {r}
+HallOfFame %>% 
+  ggplot(aes(x = yearID, fill = inducted)) +
+  geom_bar() +
+  xlim(c(1936, 2022))
+```
+
+``` {r}
+
+```
+
+``` {r}
+
+```
