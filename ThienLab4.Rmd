@@ -1,0 +1,159 @@
+---
+title: "ThienLab4"
+author: "Thien Tam Nguyen"
+date: "2024-12-10"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<!-- README.md is generated from README.Rmd. Please edit the README.Rmd file -->
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(Lahman)
+library(stringi)
+```
+
+# Lab report #4 - instructions
+
+Follow the instructions posted at <https://ds202-at-isu.github.io/labs.html> for the lab assignment. The work is meant to be finished during the lab time, but you have time until Monday (after Thanksgiving) to polish things.
+
+All submissions to the github repo will be automatically uploaded for grading once the due date is passed. Submit a link to your repository on Canvas (only one submission per team) to signal to the instructors that you are done with your submission.
+
+```{r}
+
+library(rvest)
+library(dplyr)
+library(stringr)
+```
+
+```{r}
+url <- "https://www.baseball-reference.com/awards/hof.shtml"
+
+webpage <- read_html(url)
+
+tables <- html_table(webpage, fill = TRUE)
+
+print(paste("Number of tables extracted:", length(tables)))
+
+hof_table <- tables[[1]]
+
+print(paste("Number of columns in hof_table:", ncol(hof_table)))
+print("Column names before assignment:")
+print(colnames(hof_table))
+
+hof_table <- hof_table %>%
+  select(-3)
+
+print(paste("Number of columns after removing the empty column:", ncol(hof_table)))
+print("Column names after removing the empty column:")
+print(colnames(hof_table))
+
+colnames(hof_table) <- c("Year", "Name", "Voted_By", "Inducted_As", "Votes", "Percent_Votes")
+
+print("Column names after assignment:")
+print(colnames(hof_table))
+
+hof_table <- hof_table %>%
+  rename(
+    yearID = Year,
+    playerID = Name,
+    votedBy = Voted_By,
+    inducted = Inducted_As,
+    votes = Votes,
+    percent_votes = Percent_Votes
+  )
+
+print("Column names after renaming:")
+print(colnames(hof_table))
+
+hof_table <- hof_table %>%
+  na.omit() %>%
+  mutate(
+    inducted = ifelse(tolower(inducted) == "yes", "Y", "N"),
+    votes = as.numeric(gsub(",", "", votes)),
+    percent_votes = as.numeric(gsub("%", "", percent_votes))
+  )
+
+print("Sample of cleaned hof_table:")
+print(head(hof_table))
+
+write.csv(hof_table, "cleaned_hof_data.csv", row.names = FALSE)
+
+print("Cleaned HOF data has been saved to 'cleaned_hof_data.csv'.")
+
+```
+
+
+
+```{r}
+write.csv(hof_table, "cleaned_hof_data.csv", row.names = FALSE)
+summary(hof_table)
+
+```
+
+```{r}
+# Load necessary libraries
+library(ggplot2)
+library(dplyr)
+
+# Assuming hof_table is your cleaned data frame
+# If you need to load the cleaned data from a CSV file:
+# hof_table <- read.csv("cleaned_hof_data.csv")
+
+# Convert yearID to a proper Date type (if it's not already)
+hof_table$yearID <- as.numeric(hof_table$yearID)
+
+# Group the data by year and inducted status (Y/N)
+inductee_counts <- hof_table %>%
+  group_by(yearID, inducted) %>%
+  summarise(count = n()) %>%
+  ungroup()
+
+# Plot the number of inductees by year and inducted status (Y/N)
+ggplot(inductee_counts, aes(x = yearID, y = count, fill = inducted)) +
+  geom_bar(stat = "identity", position = "stack") +
+  labs(title = "Hall of Fame Inductees by Year (Y vs N)",
+       x = "Year",
+       y = "Number of Players",
+       fill = "Inducted") +
+  scale_fill_manual(values = c("N" = "red", "Y" = "green"))
+```
+
+
+```{r}
+
+hof_data <- Lahman::HallOfFame
+
+
+head(hof_data)
+
+hof_clean <- hof_data %>%
+  filter(yearID >= 2000) %>%  # Example filter for years after 2000
+  select(playerID, yearID, inducted) %>%  # Select relevant columns
+  mutate(inducted = ifelse(inducted == "Y", "Yes", "No"))  # Clean inducted column
+
+summary(hof_clean)
+
+```
+```{r}
+
+hof_clean$playerID <- stri_trim_both(hof_clean$playerID)
+
+
+special_chars <- hof_clean %>%
+  filter(stri_detect_regex(playerID, "[^a-zA-Z0-9]"))
+head(special_chars)
+
+
+ggplot(hof_clean, aes(x = yearID, fill = inducted)) +
+  geom_bar(stat = "count", position = "stack") +
+  labs(title = "Hall of Fame Inductees by Year", x = "Year", y = "Number of Players")
+
+
+```
+
